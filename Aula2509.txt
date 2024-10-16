@@ -1,0 +1,78 @@
+/*Quais as cidades e seu país correspondente que pertencem a um país que inicie com "A"*/
+SELECT pais, cidade
+FROM pais p, cidade c
+WHERE (p.pais LIKE 'A%') and p.pais_id = c.pais_id
+GROUP BY cidade, pais;
+
+/*Qual a quantidade de cidades por pais em ordem decrescente?*/
+SELECT pais, COUNT(cidade) AS quantidade
+FROM pais p, cidade c
+WHERE  p.pais_id = c.pais_id
+GROUP BY p.pais_id
+ORDER BY quantidade DESC; 
+
+/*Qual a quantidade de cidades que iniciam com a letra"A" por pais em ordem crescente?*/
+SELECT pais, COUNT(cidade) 
+FROM pais p, cidade c
+WHERE (c.cidade LIKE 'A%') AND  p.pais_id = c.pais_id
+GROUP BY p.pais_id
+ORDER BY c.cidade ASC;
+
+/*Quais os países que possuem mais de 3 cidades que iniciam com a letra "A"?*/
+SELECT pais, count(cidade)
+FROM cidade , pais
+WHERE cidade LIKE 'A%' AND cidade.pais_id=pais.pais_id
+GROUP BY cidade.pais_id
+HAVING COUNT(*) > 3;
+
+/*Quais os países que possuem mais de 3 cidades que iniciam com a letra "A" ou tenha "R"*/
+SELECT pais, count(cidade)
+FROM cidade , pais
+WHERE (cidade.pais_id=pais.pais_id) AND (cidade LIKE 'A%' OR cidade LIKE "%R%")
+GROUP BY cidade.pais_id
+HAVING COUNT(cidade) > 3;
+
+/*Quais os clientes moram no país "United States"?*/
+SELECT primeiro_nome 
+FROM cliente, endereco, cidade, pais 
+WHERE cliente.endereco_id = endereco.endereco_id AND endereco.cidade_id = cidade.cidade_id AND cidade.pais_id = pais.pais_id AND pais = "United States";
+
+/*Quantos clientes moram no país "Brazil"?*/
+SELECT count(primeiro_nome) 
+FROM cliente, endereco, cidade, pais 
+WHERE cliente.endereco_id = endereco.endereco_id AND endereco.cidade_id = cidade.cidade_id AND cidade.pais_id = pais.pais_id AND pais = "Brazil";
+
+/*Qual a quantidade de clientes por país?*/
+SELECT count(primeiro_nome), pais
+FROM cliente, endereco, cidade, pais 
+WHERE cliente.endereco_id = endereco.endereco_id AND endereco.cidade_id = cidade.cidade_id AND cidade.pais_id = pais.pais_id
+GROUP BY pais;
+
+/*Quais países possuem mais de 10 clientes?*/
+SELECT count(primeiro_nome), pais
+FROM cliente, endereco, cidade, pais 
+WHERE cliente.endereco_id = endereco.endereco_id AND endereco.cidade_id = cidade.cidade_id AND cidade.pais_id = pais.pais_id
+GROUP BY pais
+HAVING count(*) > 10;
+
+/*Qual a média de duração dos filmes por idioma?*/
+SELECT AVG(duracao_do_filme) , idioma_id
+FROM filme
+GROUP BY idioma_id;
+
+/*Qual a quantidade de atores que atuaram nos filmes do idioma "English" */
+SELECT idioma_id, COUNT(ator_id)
+FROM filme_ator fa, filme f
+WHERE (f.filme_id = fa.filme_id) AND idioma_id = 1;
+
+/*Quais os atores do filme "BLANKET BEVERLY"?*/
+SELECT a.primeiro_nome
+FROM filme_ator fa, ator a
+WHERE fa.ator_id = a.ator_id AND fa.filme_id = 80;
+
+/*Quais categorias possuem mais de 60 filmes cadastrados*/
+SELECT c.nome_categoria, COUNT(fc.filme_id) AS filme_id
+FROM categoria c, filme_categoria fc
+WHERE c.categoria_id = fc.categoria_id
+GROUP BY c.categoria_id
+HAVING COUNT(fc.filme_id) > 60;
